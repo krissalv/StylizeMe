@@ -1,11 +1,13 @@
 import { StyleSheet, Text, View, ImageBackground, Image, Button } from 'react-native'
 import React from 'react'
+import {NavigationIndependentTree } from '@react-navigation/native'
 
 import appBgImg from "@/assets/images/appBg.png"
 import logo from "@/assets/images/logo.png"
 
 const App = () => {
   return (
+    <NavigationIndependentTree>
     <View style = {styles.container}>
       <ImageBackground
         source = {appBgImg}
@@ -20,21 +22,31 @@ const App = () => {
         <View style = {styles.space}/>
         <View style = {[{width: "70%", margin: 10, alignSelf: 'center'}]}>
           <Button 
+            onPress = {() =>
+              navigation.navigate("login")
+            }
             title = "Log-In"
             color = "#261605"
           />
           <View style = {styles.space}/>
           <Button 
+            onPress = {() =>
+              navigation.navigate("register")
+            }
             title = "Sign-Up"
             color = "#261605"
           />
         </View>
       </ImageBackground>
     </View>
+    </NavigationIndependentTree>
   )
 }
 
 export default App
+
+
+
 
 const styles = StyleSheet.create({
   container: {
