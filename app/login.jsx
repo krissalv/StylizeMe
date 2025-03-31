@@ -1,75 +1,83 @@
-import { StyleSheet, Text, View, ImageBackground, TextInput, TouchableOpacity} from 'react-native'
-import React, {useState} from 'react'
-import appBgImg from "@/assets/images/appBg.png"
-import logo from "@/assets/images/logo.png"
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, ImageBackground } from 'react-native';
+import appBgImg from '@/assets/images/appBg.png';
 
-const login = () => {
-    const [text, setText] = useState('');
+const Login = () => {
+  // Create separate state variables for username and password
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
   return (
-    <View style = {styles.container} >
-        <ImageBackground
-                source = {appBgImg}
-                resizeMode = "cover"
-                style = {styles.image}
-        >
-        <Text style = {styles.text}>Log-In</Text>
+    <View style={styles.container}>
+      <ImageBackground source={appBgImg} style={styles.image}>
+        <Text style={styles.text}>Log-In</Text>
         
+        {/* Username input field */}
         <TextInput
-            style = {styles.input}
-            placeholder = "Username"
-            onChangeText = {newText => setText(newText)}
-            defaultValue = {text}
+          style={styles.input}
+          placeholder="Username"
+          onChangeText={(newText) => setUsername(newText)}  // Update the username state
+          value={username}  // Set value to the username state
         />
+        
+        {/* Password input field */}
         <TextInput
-            style = {styles.input}
-            placeholder = "Password"
-            onChangeText = {newText => setText(newText)}
-            defaultValue = {text}
+          style={styles.input}
+          placeholder="Password"
+          secureTextEntry
+          onChangeText={(newText) => setPassword(newText)}  // Update the password state
+          value={password}  // Set value to the password state
         />
-
-        <TouchableOpacity style={{ backgroundColor: '#261605', padding: 10, borderRadius: 15, marginHorizontal: 30, marginVertical: 7}}>
-            <Text style={{ color: '#fff', textAlign: 'center', fontWeight: 'bold' }}>Submit</Text>
+        
+        {/* Submit button */}
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.buttonText}>Submit</Text>
         </TouchableOpacity>
-        </ImageBackground>
+      </ImageBackground>
     </View>
-  )
-}
-
-export default login
+  );
+};
 
 const styles = StyleSheet.create({
-    container: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      flex: 1, 
-      flexDirection: 'column', 
-      marginHorizontal: 16,
-    },
-    image:{
-      width: '100%', 
-      height: '100%',
-      flex: 1, 
-      resizeMode: 'cover',
-      justifyContent: 'center',
-    },
-    text: {
-      color: '#261605',
-      fontSize: 42, 
-      fontWeight: 'bold', 
-      textAlign: 'center',
-      marginVertical: 10,
-    },
-    input:{
-        backgroundColor: "#FFF3D8",
-        height: 40,
-        marginVertical: 7, 
-        marginHorizontal: 30,
-        borderWidth: 2, 
-        padding:10,
-        borderRadius: 15,
-    },
-    space: {
-      width: 20, 
-      height: 20,
-    },
-  })
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  image: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    resizeMode: 'cover',
+  },
+  text: {
+    color: '#261605',
+    fontSize: 42,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  input: {
+    backgroundColor: '#FFF3D8',
+    height: 40,
+    marginVertical: 7,
+    marginHorizontal: 30,
+    borderWidth: 2,
+    padding: 10,
+    borderRadius: 15,
+  },
+  button: {
+    backgroundColor: '#261605',
+    padding: 10,
+    borderRadius: 15,
+    marginHorizontal: 30,
+    marginVertical: 7,
+  },
+  buttonText: {
+    color: '#fff',
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+});
+
+export default Login;
