@@ -15,6 +15,16 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    ```bash
     npx expo start
    ```
+3. To run the app the the additional dependencies need to be installed: 
+# Install React Navigation
+npm install @react-navigation/native
+
+# Install dependencies for React Navigation (required for linking and navigation)
+npm install react-native-screens react-native-safe-area-context
+
+# Install the Stack Navigator
+npm install @react-navigation/stack
+
 
 In the output, you'll find options to open the app in a
 
