@@ -2,6 +2,18 @@ import { StyleSheet, Text, View, ImageBackground, TextInput, TouchableOpacity} f
 import React, {useState} from 'react'
 import appBgImg from "@/assets/images/appBg.png"
 import logo from "@/assets/images/logo.png"
+import "config/firebaseConfig.js"]
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+
+const auth = getAuth(app);
+
+signInWithEmailAndPassword(auth, email, password)
+  .then((userCredential) => {
+    console.log("Logged in as:", userCredential.user.email);
+  })
+  .catch((error) => {
+    console.error("Login failed:", error.message);
+  });
 
 const register = () => {
     const [text, setText] = useState('');
