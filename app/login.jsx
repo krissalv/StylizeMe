@@ -1,75 +1,191 @@
-import { StyleSheet, Text, View, ImageBackground, TextInput, TouchableOpacity} from 'react-native'
-import React, {useState} from 'react'
-import appBgImg from "@/assets/images/appBg.png"
-import logo from "@/assets/images/logo.png"
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ImageBackground, Platform, KeyboardAvoidingView, Alert } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { router } from 'expo-router';
+import { signIn, resetPassword } from '../utils/firebase';
+import appBgImg from "@/assets/images/appBg.png";
 
-const login = () => {
-    const [text, setText] = useState('');
+export default function LoginScreen() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert('Error', 'Please fill in all fields');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await signIn(email, password);
+      router.replace('/');
+    } catch (error) {
+      console.error('Login error:', error);
+      Alert.alert('Error', error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    if (!email) {
+      Alert.alert('Error', 'Please enter your email address');
+      return;
+    }
+
+    try {
+      await resetPassword(email);
+      Alert.alert('Success', 'Password reset email sent. Please check your inbox.');
+    } catch (error) {
+      console.error('Password reset error:', error);
+      Alert.alert('Error', error.message);
+    }
+  };
+
+  const handleBack = () => {
+    router.back();
+  };
+
   return (
-    <View style = {styles.container} >
-        <ImageBackground
-                source = {appBgImg}
-                resizeMode = "cover"
-                style = {styles.image}
+    <View style={styles.container}>
+      <ImageBackground
+        source={appBgImg}
+        resizeMode="cover"
+        style={styles.image}
+      >
+        <StatusBar style="auto" />
+        <KeyboardAvoidingView 
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.content}
         >
-        <Text style = {styles.text}>Log-In</Text>
-        
-        <TextInput
-            style = {styles.input}
-            placeholder = "Username"
-            onChangeText = {newText => setText(newText)}
-            defaultValue = {text}
-        />
-        <TextInput
-            style = {styles.input}
-            placeholder = "Password"
-            onChangeText = {newText => setText(newText)}
-            defaultValue = {text}
-        />
+          <TouchableOpacity 
+            style={styles.backButton}
+            onPress={handleBack}
+          >
+            <Text style={styles.backButtonText}>← Back</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity style={{ backgroundColor: '#261605', padding: 10, borderRadius: 15, marginHorizontal: 30, marginVertical: 7}}>
-            <Text style={{ color: '#fff', textAlign: 'center', fontWeight: 'bold' }}>Submit</Text>
-        </TouchableOpacity>
-        </ImageBackground>
+          <Text style={styles.title}>Login</Text>
+          
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+          
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
+          
+          <TouchableOpacity 
+            style={styles.button}
+            onPress={handleLogin}
+            disabled={loading}
+          >
+            <Text style={styles.buttonText}>
+              {loading ? 'Logging in...' : 'Login'}
+            </Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={styles.forgotPassword}
+            onPress={handleForgotPassword}
+          >
+            <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+          </TouchableOpacity>
+          
+          <View style={styles.signupContainer}>
+            <Text style={styles.signupText}>Don't have an account? </Text>
+            <TouchableOpacity onPress={() => router.push('/register')}>
+              <Text style={styles.signupLink}>Sign Up</Text>
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
+      </ImageBackground>
     </View>
-  )
+  );
 }
 
-export default login
-
 const styles = StyleSheet.create({
-    container: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      flex: 1, 
-      flexDirection: 'column', 
-      marginHorizontal: 16,
-    },
-    image:{
-      width: '100%', 
-      height: '100%',
-      flex: 1, 
-      resizeMode: 'cover',
-      justifyContent: 'center',
-    },
-    text: {
-      color: '#261605',
-      fontSize: 42, 
-      fontWeight: 'bold', 
-      textAlign: 'center',
-      marginVertical: 10,
-    },
-    input:{
-        backgroundColor: "#FFF3D8",
-        height: 40,
-        marginVertical: 7, 
-        marginHorizontal: 30,
-        borderWidth: 2, 
-        padding:10,
-        borderRadius: 15,
-    },
-    space: {
-      width: 20, 
-      height: 20,
-    },
-  })
+  container: {
+    flex: 1,
+  },
+  image: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+  },
+  backButton: {
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? 50 : 20,
+    left: 20,
+  },
+  backButtonText: {
+    color: '#261605',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  title: {
+    color: '#261605',
+    fontSize: 42,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 30,
+  },
+  input: {
+    backgroundColor: "#FFF3D8",
+    height: 50,
+    marginVertical: 10,
+    borderWidth: 2,
+    padding: 10,
+    borderRadius: 15,
+    fontSize: 16,
+  },
+  button: {
+    backgroundColor: '#261605',
+    padding: 15,
+    borderRadius: 15,
+    marginTop: 20,
+  },
+  buttonText: {
+    color: '#fff',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  forgotPassword: {
+    marginTop: 15,
+    alignItems: 'center',
+  },
+  forgotPasswordText: {
+    color: '#261605',
+    fontSize: 14,
+  },
+  signupContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 20,
+  },
+  signupText: {
+    color: '#261605',
+    fontSize: 14,
+  },
+  signupLink: {
+    color: '#261605',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+});
