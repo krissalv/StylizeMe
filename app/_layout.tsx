@@ -1,21 +1,24 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack, useRouter } from 'expo-router';
+import { Stack, useRouter, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../config/firebaseConfig';
+import { AuthProvider, useAuth } from '../context/AuthContext';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-export default function RootLayout() {
+type RouteGroup = '(auth)' | '(tabs)';
+
+function RootLayoutNav() {
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
   const router = useRouter();
+  const segments = useSegments();
+  const { user, loading } = useAuth();
 
   useEffect(() => {
     if (loaded) {
@@ -24,25 +27,21 @@ export default function RootLayout() {
   }, [loaded]);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (!loaded) return;
-      
-      // Simple check for auth screens
-      const isAuthScreen = !router.canGoBack();
-      
-      if (!user && !isAuthScreen) {
-        // Redirect to the welcome page if not signed in
-        router.replace('/welcome');
-      } else if (user && isAuthScreen) {
-        // Redirect to the home page if signed in
-        router.replace('/');
-      }
-    });
+    if (!loaded || loading) return;
 
-    return () => unsubscribe();
-  }, [loaded]);
+    // Get the current route group
+    const currentGroup = segments[0] as RouteGroup;
 
-  if (!loaded) {
+    if (!user && currentGroup !== '(auth)') {
+      // Redirect to the welcome page if not signed in
+      router.replace('/');
+    } else if (user && currentGroup === '(auth)') {
+      // Redirect to the home page if signed in
+      router.replace('/(tabs)');
+    }
+  }, [loaded, user, loading, segments]);
+
+  if (!loaded || loading) {
     return null;
   }
 
@@ -50,17 +49,22 @@ export default function RootLayout() {
     <ThemeProvider value={DefaultTheme}>
       <Stack screenOptions={{ headerShown: false }}>
         {/* Auth Screens */}
-        <Stack.Screen name="welcome" />
-        <Stack.Screen name="login" />
-        <Stack.Screen name="register" />
+        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         
         {/* Main App Screens */}
-        <Stack.Screen name="index" />
-        <Stack.Screen name="profile" />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="settings" />
         <Stack.Screen name="item/[id]" />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <AuthProvider>
+      <RootLayoutNav />
+    </AuthProvider>
   );
 }

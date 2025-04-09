@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, TextInput, Alert, ScrollView, Platform, KeyboardAvoidingView } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { router } from 'expo-router';
-import { auth } from '../config/firebaseConfig';
-import { getUserProfile, updateUserProfile } from '../utils/firebase';
+import { auth } from '../../config/firebaseConfig';
+import { getUserProfile, updateUserProfile } from '../../utils/firebase';
 import appBgImg from "@/assets/images/appBg.png";
 
 export default function ProfileScreen() {

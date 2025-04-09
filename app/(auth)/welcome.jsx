@@ -6,11 +6,11 @@ import appBgImg from "@/assets/images/appBg.png";
 
 export default function WelcomeScreen() {
   const handleSignUp = () => {
-    router.push('/register');
+    router.push('/(auth)/register');
   };
 
   const handleLogin = () => {
-    router.push('/login');
+    router.push('/(auth)/login');
   };
 
   return (

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, ImageBackground, Platform, KeyboardAvoidingView, Alert, ScrollView } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { router } from 'expo-router';
-import { signUp } from '../utils/firebase';
+import { signUp } from '../../utils/firebase';
 import appBgImg from "@/assets/images/appBg.png";
 
 export default function RegisterScreen() {
@@ -33,7 +33,7 @@ export default function RegisterScreen() {
         username,
       };
       await signUp(email, password, userData);
-      router.replace('/');
+      router.replace('/(tabs)');
     } catch (error) {
       console.error('Registration error:', error);
       Alert.alert('Error', error.message);
@@ -127,7 +127,7 @@ export default function RegisterScreen() {
             
             <View style={styles.loginContainer}>
               <Text style={styles.loginText}>Already have an account? </Text>
-              <TouchableOpacity onPress={() => router.push('/login')}>
+              <TouchableOpacity onPress={() => router.push('/(auth)/login')}>
                 <Text style={styles.loginLink}>Login</Text>
               </TouchableOpacity>
             </View>

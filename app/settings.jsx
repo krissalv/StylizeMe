@@ -16,7 +16,7 @@ export default function SettingsScreen() {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (!user) {
-        router.replace('/welcome');
+        router.replace('/');
       } else {
         setUser(user);
       }
@@ -29,7 +29,7 @@ export default function SettingsScreen() {
   const handleSignOut = async () => {
     try {
       await signOutUser();
-      router.replace('/welcome');
+      router.replace('/');
     } catch (error) {
       console.error('Error signing out:', error);
       Alert.alert('Error', 'Failed to sign out');
@@ -122,7 +122,7 @@ export default function SettingsScreen() {
             
             <TouchableOpacity 
               style={styles.settingButton}
-              onPress={() => router.push('/profile')}
+              onPress={() => router.push('/(tabs)/profile')}
             >
               <Text style={styles.settingButtonText}>Edit Profile</Text>
             </TouchableOpacity>

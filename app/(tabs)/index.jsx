@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Platform, ImageBackground, TouchableOpacity, TextInput, Alert } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { router } from 'expo-router';
-import { isWeb, isMobile } from '../utils/platform';
-import { auth } from '../config/firebaseConfig';
-import { getUserProfile, getUserItems, addItem, deleteItem } from '../utils/firebase';
+import { isWeb, isMobile } from '../../utils/platform';
+import { auth } from '../../config/firebaseConfig';
+import { getUserProfile, getUserItems, addItem, deleteItem } from '../../utils/firebase';
 import appBgImg from "@/assets/images/appBg.png";
 
 export default function HomeScreen() {

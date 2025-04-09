@@ -18,7 +18,7 @@ export default function ItemDetailsScreen() {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (!user) {
-        router.replace('/welcome');
+        router.replace('/');
       } else {
         setUser(user);
         try {

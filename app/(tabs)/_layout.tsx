@@ -1,5 +1,6 @@
 import { Tabs } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
+import { Platform } from 'react-native';
 
 export default function TabLayout() {
   return (
@@ -11,6 +12,8 @@ export default function TabLayout() {
           backgroundColor: '#fff',
           borderTopWidth: 1,
           borderTopColor: '#e5e5e5',
+          height: Platform.OS === 'ios' ? 88 : 60,
+          paddingBottom: Platform.OS === 'ios' ? 30 : 10,
         },
         headerShown: false,
       }}
@@ -25,7 +28,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="explore/index"
         options={{
           title: 'Explore',
           tabBarIcon: ({ color, size }) => (
