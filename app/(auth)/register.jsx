@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, ImageBackground, P
 import { StatusBar } from 'expo-status-bar';
 import { router } from 'expo-router';
 import { signUp } from '../../utils/firebase';
+import { auth } from '../../config/firebaseConfig';
+import { fetchSignInMethodsForEmail } from 'firebase/auth';
 import appBgImg from "@/assets/images/appBg.png";
 
 export default function RegisterScreen() {
@@ -27,6 +29,14 @@ export default function RegisterScreen() {
 
     setLoading(true);
     try {
+      // Check if email already exists
+      const methods = await fetchSignInMethodsForEmail(auth, email);
+      if (methods.length > 0) {
+        Alert.alert('Error', 'This email is already registered. Please use a different email or login.');
+        setLoading(false);
+        return;
+      }
+
       const userData = {
         firstName,
         lastName,

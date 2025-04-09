@@ -1,7 +1,9 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Platform } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Platform, ImageBackground } from 'react-native';
 import { useRouter } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
+import { StatusBar } from 'expo-status-bar';
+import appBgImg from "@/assets/images/appBg.png";
 
 export default function Explore() {
   const router = useRouter();
@@ -46,33 +48,73 @@ export default function Explore() {
     router.push('/search');
   };
 
+  const handlePlanOutfit = () => {
+    // Navigate to plan outfit screen
+    router.push('/plan-outfit');
+  };
+
+  const handleViewTips = () => {
+    // Navigate to style tips screen
+    router.push('/style-tips');
+  };
+
   return (
     <View style={styles.container}>
-      <View style={[styles.header, { paddingTop: Platform.OS === 'ios' ? 60 : 40 }]}>
-        <Text style={styles.title}>Explore Styles</Text>
-        <TouchableOpacity 
-          style={styles.searchButton}
-          onPress={handleSearchPress}
-        >
-          <MaterialIcons name="search" size={24} color="#333" />
-        </TouchableOpacity>
-      </View>
-
-      <ScrollView style={styles.content}>
-        <View style={styles.categoriesGrid}>
-          {categories.map((category) => (
-            <TouchableOpacity
-              key={category.id}
-              style={styles.categoryCard}
-              onPress={() => handleCategoryPress(category)}
-            >
-              <Text style={styles.categoryIcon}>{category.icon}</Text>
-              <Text style={styles.categoryTitle}>{category.title}</Text>
-              <Text style={styles.categoryDescription}>{category.description}</Text>
-            </TouchableOpacity>
-          ))}
+      <ImageBackground
+        source={appBgImg}
+        resizeMode="cover"
+        style={styles.image}
+      >
+        <StatusBar style="auto" />
+        <View style={[styles.header, { paddingTop: Platform.OS === 'ios' ? 60 : 40 }]}>
+          <Text style={styles.title}>Explore Styles</Text>
+          <TouchableOpacity 
+            style={styles.searchButton}
+            onPress={handleSearchPress}
+          >
+            <MaterialIcons name="search" size={24} color="#F5E6D3" />
+          </TouchableOpacity>
         </View>
-      </ScrollView>
+
+        <ScrollView style={styles.content}>
+          {/* Quick Actions Section */}
+          <View style={styles.quickActions}>
+            <TouchableOpacity 
+              style={[styles.actionButton, { backgroundColor: '#4A3B2B' }]}
+              onPress={handlePlanOutfit}
+            >
+              <MaterialIcons name="style" size={24} color="#F5E6D3" />
+              <Text style={styles.actionText}>Plan Outfit</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              style={[styles.actionButton, { backgroundColor: '#8B4513' }]}
+              onPress={handleViewTips}
+            >
+              <MaterialIcons name="lightbulb" size={24} color="#F5E6D3" />
+              <Text style={styles.actionText}>View Tips</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Categories Section */}
+          <View style={styles.categoriesContainer}>
+            <Text style={styles.sectionTitle}>Categories</Text>
+            <View style={styles.categoriesGrid}>
+              {categories.map((category) => (
+                <TouchableOpacity
+                  key={category.id}
+                  style={styles.categoryCard}
+                  onPress={() => handleCategoryPress(category)}
+                >
+                  <Text style={styles.categoryIcon}>{category.icon}</Text>
+                  <Text style={styles.categoryTitle}>{category.title}</Text>
+                  <Text style={styles.categoryDescription}>{category.description}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        </ScrollView>
+      </ImageBackground>
     </View>
   );
 }
@@ -80,7 +122,11 @@ export default function Explore() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#261605',
+  },
+  image: {
+    flex: 1,
+    justifyContent: 'center',
   },
   header: {
     flexDirection: 'row',
@@ -92,7 +138,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#F5E6D3',
   },
   searchButton: {
     padding: 10,
@@ -100,15 +146,53 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
   },
+  quickActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingHorizontal: 20,
+    marginBottom: 20,
+  },
+  actionButton: {
+    padding: 15,
+    borderRadius: 12,
+    alignItems: 'center',
+    width: '45%',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  actionText: {
+    color: '#F5E6D3',
+    marginTop: 5,
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  categoriesContainer: {
+    backgroundColor: 'rgba(74, 59, 43, 0.8)',
+    borderRadius: 15,
+    padding: 20,
+    marginHorizontal: 20,
+    marginBottom: 20,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#F5E6D3',
+    marginBottom: 15,
+  },
   categoriesGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 10,
     justifyContent: 'space-between',
   },
   categoryCard: {
     width: '48%',
-    backgroundColor: '#f8f8f8',
+    backgroundColor: 'rgba(245, 230, 211, 0.9)',
     borderRadius: 15,
     padding: 20,
     marginBottom: 20,
@@ -118,7 +202,7 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.2,
     shadowRadius: 3,
     elevation: 3,
   },
@@ -129,12 +213,12 @@ const styles = StyleSheet.create({
   categoryTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#261605',
     marginBottom: 5,
   },
   categoryDescription: {
     fontSize: 14,
-    color: '#666',
+    color: '#261605',
     textAlign: 'center',
   },
 }); 
