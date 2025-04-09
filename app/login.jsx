@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, ImageBackground } from 'react-native';
 import appBgImg from '@/assets/images/appBg.png';
+import { useNavigation } from '@react-navigation/native';
 
 const Login = () => {
   // Create separate state variables for username and password
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
@@ -30,7 +32,10 @@ const Login = () => {
         />
         
         {/* Submit button */}
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity 
+          style={styles.button}
+          onPress={() => navigation.navigate('Home')}
+        >
           <Text style={styles.buttonText}>Submit</Text>
         </TouchableOpacity>
       </ImageBackground>

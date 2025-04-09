@@ -7,6 +7,7 @@ import appBgImg from "@/assets/images/appBg.png";
 import logo from "@/assets/images/logo.png";
 import Login from './login'; // Import your login screen
 import Register from './register'; // Import your register screen
+import HomeScreen from './home'; // Import your register screen
 
 const Stack = createStackNavigator(); // Create Stack Navigator
 
@@ -63,6 +64,11 @@ const App = () => {
         component={Register}
         options={{ headerShown: false }} // Disable header for Register screen
       />
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ headerShown: false }} // Disable header for Register screen
+      />
     </Stack.Navigator>
   );
 };
@@ -75,7 +81,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     flexDirection: 'column',
-    marginHorizontal: 16,
   },
   image: {
     width: '100%',
