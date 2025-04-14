@@ -4,12 +4,7 @@ import { StyleSheet, Text, View, ImageBackground, Image, Button, TouchableOpacit
 import axios from 'axios'; 
 import OpenAI from "openai";
 
-//Chat Key 1: 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
-//Chat Key 2: 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
-//News API Key: 0c4b7246ea024ad0a0b06b3494d53d1e
 import appBgImg from "@/assets/images/appBg.png";
-
-const openai = new OpenAI({apiKey: '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'}); 
 
 //const [fashionNews, setFashionNews] = useState([]);
 
