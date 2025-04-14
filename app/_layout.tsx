@@ -6,11 +6,20 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 import { AuthProvider, useAuth } from '../context/AuthContext';
+import { View, ActivityIndicator } from 'react-native';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 type RouteGroup = '(auth)' | '(tabs)';
+
+const customTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: '#261605',
+  },
+};
 
 function RootLayoutNav() {
   const [loaded] = useFonts({
@@ -32,31 +41,34 @@ function RootLayoutNav() {
     // Get the current route group
     const currentGroup = segments[0] as RouteGroup;
 
-    if (!user && currentGroup !== '(auth)') {
-      // Redirect to the welcome page if not signed in
-      router.replace('/');
-    } else if (user && currentGroup === '(auth)') {
-      // Redirect to the home page if signed in
-      router.replace('/(tabs)');
+    if (!user) {
+      // If not authenticated and not already on an auth screen, redirect to welcome
+      if (currentGroup !== '(auth)') {
+        router.replace('/(auth)/welcome');
+      }
+    } else {
+      // If authenticated and on an auth screen, redirect to home
+      if (currentGroup === '(auth)') {
+        router.replace('/(tabs)');
+      }
     }
   }, [loaded, user, loading, segments]);
 
   if (!loaded || loading) {
-    return null;
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#261605' }}>
+        <ActivityIndicator size="large" color="#F5E6D3" />
+      </View>
+    );
   }
 
   return (
-    <ThemeProvider value={DefaultTheme}>
+    <ThemeProvider value={customTheme}>
+      <StatusBar style="light" />
       <Stack screenOptions={{ headerShown: false }}>
-        {/* Auth Screens */}
-        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-        
-        {/* Main App Screens */}
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="settings" />
-        <Stack.Screen name="item/[id]" />
+        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
       </Stack>
-      <StatusBar style="auto" />
     </ThemeProvider>
   );
 }

@@ -6,12 +6,12 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: '#261605',
+        tabBarActiveTintColor: '#F5E6D3',
         tabBarInactiveTintColor: '#4A3B2B',
         tabBarStyle: {
-          backgroundColor: '#fff',
+          backgroundColor: '#261605',
           borderTopWidth: 1,
-          borderTopColor: '#e5e5e5',
+          borderTopColor: '#4A3B2B',
           height: Platform.OS === 'ios' ? 88 : 60,
           paddingBottom: Platform.OS === 'ios' ? 30 : 10,
         },
@@ -28,7 +28,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="explore/index"
+        name="explore"
         options={{
           title: 'Explore',
           tabBarIcon: ({ color, size }) => (
