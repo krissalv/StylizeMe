@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "895116104117",
+    "firebase_url": "https://stylizeme-f53cd-default-rtdb.firebaseio.com",
+    "project_id": "stylizeme-f53cd",
+    "storage_bucket": "stylizeme-f53cd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:895116104117:android:de9696f225f6d5829389fc",
+        "android_client_info": {
+          "package_name": "Stylize_Me.D2024"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8bnvopttJgt4iiM2mohWgyukPMnHdeRA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
