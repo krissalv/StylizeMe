@@ -10,17 +10,7 @@ import appBgImg from "@/assets/images/appBg.png";
 
 const HomeScreen = () => {
   
-  {/*useEffect(() =>{
-    const fetchData = async () => {
-      try{
-        const {data} = await axios.get('https://newsapi.org/v2/everything?q=fashionANDsustainabilityORenvironmental&apiKey=0c4b7246ea024ad0a0b06b3494d53d1e')
-        setFashionNews(data);
-      } catch (e) {
-        console.log(e)
-      }
-    }
-    fetchData();
-  }, [])*/}
+
 
 
   const generateOutfit = () =>{

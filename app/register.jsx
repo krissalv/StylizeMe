@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, ImageBackground } from 'react-native';
 import appBgImg from '@/assets/images/appBg.png';
+import { useNavigation } from '@react-navigation/native';
 
 const Register = () => {
   const [firstName, setFirstName] = useState('');
