@@ -46,17 +46,12 @@ function RootLayoutNav() {
   }
 
   return (
-<<<<<<< HEAD
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack screenOptions={{headerShown:false}}>
-=======
     <ThemeProvider value={DefaultTheme}>
       <Stack screenOptions={{ headerShown: false }}>
         {/* Auth Screens */}
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         
         {/* Main App Screens */}
->>>>>>> origin/master
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="settings" />
         <Stack.Screen name="item/[id]" />
@@ -64,9 +59,6 @@ function RootLayoutNav() {
       <StatusBar style="auto" />
     </ThemeProvider>
   );
-<<<<<<< HEAD
-}
-=======
 }
 
 export default function RootLayout() {
@@ -76,4 +68,3 @@ export default function RootLayout() {
     </AuthProvider>
   );
 }
->>>>>>> origin/master

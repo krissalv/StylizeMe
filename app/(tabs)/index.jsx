@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Platform, ImageBackground, TouchableOpacity, TextInput, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Platform, ImageBackground, TouchableOpacity, TextInput, Alert, Image } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { router } from 'expo-router';
 import { isWeb, isMobile } from '../../utils/platform';
 import { auth } from '../../config/firebaseConfig';
 import { getUserProfile, getUserItems, addItem, deleteItem } from '../../utils/firebase';
 import appBgImg from "@/assets/images/appBg.png";
+import logo from "@/assets/images/logo.png";
+import * as ImagePicker from "expo-image-picker"
 
 export default function HomeScreen() {
   const [user, setUser] = useState(null);
@@ -104,6 +106,36 @@ export default function HomeScreen() {
     );
   }
 
+  const [image, setImage] = useState(); 
+
+  const uploadImage = async()=> {
+    try {
+      await ImagePicker.requestCameraPermissionsAsync();
+      let result = await ImagePicker.launchCameraAsync({
+        cameraType: ImagePicker.CameraType.back,
+        allowsEditing: true,
+        aspect:[1,1],
+        quality: 1,
+      }); 
+      
+      if (!result.canceled){
+        await saveImage(result.assets[0].uri);
+      }
+    } catch (error){
+      alert("Error uploading image: " + error.message); 
+      setModalVisible(false); 
+    }
+  };
+
+  const saveImage = async(image)=>{
+    try {
+      setImage(image)
+      setModalVisible(false);
+    } catch (error){
+      throw error;
+    }
+  };
+
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -114,8 +146,10 @@ export default function HomeScreen() {
         <StatusBar style="auto" />
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.headerContainer}>
-            <Text style={styles.appName}>Stylize</Text>
-            <Text style={styles.appName}>Me</Text>
+            <Image
+              source={logo}
+              style={{ alignSelf: 'center', width: 250, height: 150, resizeMode: "contain" }}
+            />
           </View>
           <Text style={styles.subtitle}>
             Your personal styling companion
@@ -150,10 +184,10 @@ export default function HomeScreen() {
           </View>
 
           <View style={styles.addItemContainer}>
-            <Text style={styles.sectionTitle}>Add New Item</Text>
+            <Text style={styles.sectionTitle}>Let's Build an Outfit!</Text>
             <TextInput
               style={styles.input}
-              placeholder="Item Title"
+              placeholder="Style Name"
               value={newItemTitle}
               onChangeText={setNewItemTitle}
             />
@@ -239,14 +273,15 @@ const styles = StyleSheet.create({
   appName: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#F5E6D3',
+    color: '#261605',
     textAlign: 'center',
   },
   subtitle: {
-    fontSize: 16,
-    color: '#F5E6D3',
+    fontSize: 18,
+    color: '#261605',
     textAlign: 'center',
     marginBottom: 30,
+    fontWeight: 'bold',
   },
   userContainer: {
     backgroundColor: 'rgba(74, 59, 43, 0.8)',
@@ -260,6 +295,7 @@ const styles = StyleSheet.create({
     color: '#F5E6D3',
     marginBottom: 15,
     textAlign: 'center',
+    fontWeight: 'bold'
   },
   navButtons: {
     flexDirection: 'row',
