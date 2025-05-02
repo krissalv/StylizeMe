@@ -9,36 +9,6 @@ import appBgImg from "@/assets/images/appBg.png";
 
 const HomeScreen = () => {
   
-
-
-
-  const generateOutfit = () =>{
-    fetch("https://api.openai.com/v1/responses", {
-      method: "POST", 
-      headers:{
-        "Content-Type":"application/json",
-        "Authorization": `Bearer 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`
-      },
-      body:JSON.stringify({
-        "model": "gpt-4o",
-        "input":[
-          {
-            role: "user",
-            content: [
-              {type: "input_text", text: "Build me a Shoujo outfit around this piece."},
-              {
-                type: "input_image",
-                image_url: "https://i.pinimg.com/736x/32/c5/66/32c5660ca6b74df63344aecd56a9341a.jpg"
-              }
-            ]
-          }
-        ]
-      })
-    }).then((response) => response.json()).then((data)=>{
-        console.log(data)
-    }) 
-  }
-
   return (
     <View style={styles.container}>
       <ImageBackground 
