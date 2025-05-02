@@ -50,6 +50,16 @@ A cross-platform mobile application for personal styling and outfit planning.
    FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
    FIREBASE_APP_ID=your_app_id
    ```
+3. To run the app the the additional dependencies need to be installed: 
+# Install React Navigation
+npm install @react-navigation/native
+
+# Install dependencies for React Navigation (required for linking and navigation)
+npm install react-native-screens react-native-safe-area-context
+
+# Install the Stack Navigator
+npm install @react-navigation/stack
+
 
 4. Start the development server:
    ```
