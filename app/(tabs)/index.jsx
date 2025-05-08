@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Animated, Dimensions, Modal, ActivityIndicator, View, Text, StyleSheet, ScrollView, Platform, ImageBackground, TouchableOpacity, TextInput, Alert, Image } from 'react-native';
+import { Linking, Animated, Dimensions, Modal, ActivityIndicator, View, Text, StyleSheet, ScrollView, Platform, ImageBackground, TouchableOpacity, TextInput, Alert, Image, FlatList } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { router } from 'expo-router';
 import { isWeb, isMobile } from '../../utils/platform';
@@ -10,6 +10,7 @@ import logo from "@/assets/images/logo.png";
 import * as ImagePicker from "expo-image-picker"
 import * as ImageManipulator from 'expo-image-manipulator';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import axios from 'axios';
 
 export default function HomeScreen() {
   const [user, setUser] = useState(null);
@@ -25,6 +26,11 @@ export default function HomeScreen() {
   const [showExtras, setShowExtras] = useState(false);
   const animatedHeight = useRef(new Animated.Value(300)).current;
   const SCREEN_HEIGHT = Dimensions.get('window').height;
+  const [showOutputOnly, setShowOutputOnly] = useState(false);
+  const [articles, setArticles] = useState([]);
+  const API_KEY = ''; // Replace with your actual API key
+  const query = 'fashion sustainability'; // Search query
+
 
 
   useEffect(() => {
@@ -71,6 +77,52 @@ useEffect(() => {
     }
   };
 
+  useEffect(() => {
+    // Function to fetch the news data
+    const fetchNews = async () => {
+      try {
+        const response = await axios.get(`https://newsapi.org/v2/everything?q=${query}&apiKey=${API_KEY}&pageSize=5`);
+        setArticles(response.data.articles);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching news:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchNews();
+  }, []);
+
+  const handlePress = async (url) => {
+    const supported = await Linking.canOpenURL(url);
+    if (supported) {
+      await Linking.openURL(url);
+    } else {
+      Alert.alert(`Can't open this URL: ${url}`);
+    }
+  };
+  
+
+  const renderArticle = ({ item }) => {
+    return (
+      <View style={styles.articleContainer}>
+        <Text style={styles.articleTitle} onPress={() => Linking.openURL(item.url)}>{item.title}</Text>
+        <Text style={styles.description}>{item.description}</Text>
+        <Text style={styles.articleSubtitle}>Source: {item.source.name}</Text>
+        <Text style={styles.articleSubtitle}>Published: {new Date(item.publishedAt).toLocaleString()}</Text>
+      </View>
+    );
+  };
+
+
+
+  const resetFields = () => {
+    setNewItemTitle('');
+    setImageUri(null);
+    setOutput('');
+    setLoading(false);
+  };
+  
   const handleAddItem = async () => {
     if (!newItemTitle.trim()) {
       Alert.alert('Error', 'Please enter a title for your item');
@@ -80,7 +132,9 @@ useEffect(() => {
     try {
       const itemData = {
         title: newItemTitle.trim(),
-        description: newItemDescription.trim()
+        description: output.length > 150 ? output.slice(0, 150) + '...' : output,
+        fullDescription: output,
+        image: imageUri || null
       };
       
       await addItem(user.uid, itemData);
@@ -90,8 +144,8 @@ useEffect(() => {
       setItems(updatedItems);
       
       // Clear input fields
-      setNewItemTitle('');
-      setNewItemDescription('');
+      resetFields();
+      setVisible(false);
       
       Alert.alert('Success', 'Item added successfully');
     } catch (error) {
@@ -251,8 +305,12 @@ useEffect(() => {
   
       if (data?.choices?.[0]?.message?.content) {
         const textResponse = data?.choices[0]?.message?.content;
-        console.log("Generated Output:", textResponse);
-        setOutput(textResponse || "No Output Received.");
+        const cleanedResponse = textResponse
+          .replace(/\*/g, '') // Remove all asterisks
+          .replace(/-/g, '•');  // Remove all hyphens
+        console.log("Cleaned Output:", cleanedResponse);
+        setOutput(cleanedResponse);
+        setShowOutputOnly(true); 
       } else {
         setOutput("No content in response.");
       }
@@ -263,8 +321,6 @@ useEffect(() => {
       setLoading(false);
     }
   };
-
-
 
   return (
     <View style={styles.container}>
@@ -322,69 +378,110 @@ useEffect(() => {
             <Modal visible={visible} animationType="slide" transparent = {true}>
               <View style = {styles.modalOverlay}>
                 <Animated.View style={[styles.modalContent, {height: animatedHeight}]}>
-                <ScrollView contentContainerStyle = {{flexGrow:1}} showsVerticalScrollIndicator = {false}>
-                  <View style = {styles.content}>
-                    <Text style={styles.sectionTitle2}>Build an Outfit</Text>
+                    {output === '' ? (
+                      <View style = {styles.content}>
+                        <Text style={styles.sectionTitle2}>Build an Outfit</Text>
+                        <TextInput
+                          style={styles.input}
+                          placeholder="Enter style name"
+                          value={newItemTitle}
+                          onChangeText={setNewItemTitle}
+                        />
 
-                    <TextInput
-                      style={styles.input}
-                      placeholder="Enter style name"
-                      value={newItemTitle}
-                      onChangeText={setNewItemTitle}
-                    />
+                        <TouchableOpacity
+                          style={{
+                            backgroundColor: '#261605',
+                            borderRadius: 15,
+                            width: '85%',
+                            padding: 10,
+                            marginBottom: 10,
+                          }}
+                          onPress={handleImageSelection}
+                        >
+                          <View style={{ alignItems: 'center' }}>
+                            <Text style={{ fontSize: 15, color: '#F5E6D3' }}>
+                              Upload Your Image Here!
+                            </Text>
+                            <AntDesign name="upload" size={24} color="#F5E6D3" />
+                          </View>
+                        </TouchableOpacity>
 
-                    <TouchableOpacity style = {{
-                      backgroundColor: '#261605',
-                      borderRadius: 15,
-                      width: '85%',
-                      padding: 10,
-                      marginBottom: 10, 
-                    }}
-                    onPress={() => handleImageSelection()}
-                    >
-                      <View style = {{
-                        alignItems: 'center',
-                      }}>
-                        <Text style = {{
-                          fontSize: 15, 
-                          color: '#F5E6D3',
-                        }}>Upload Your Image Here!</Text>
-                        <AntDesign name="upload" size={24} color="#F5E6D3" />
-                      </View>
-                    </TouchableOpacity>
+                        {imageUri && (
+                          <Image
+                            source={{ uri: imageUri }}
+                            style={{
+                              width: 200,
+                              height: 200,
+                              borderRadius: 10,
+                              marginBottom: 10,
+                            }}
+                            resizeMode="cover"
+                          />
+                        )}
+                        <View style={styles.navButtons}>
+                          <TouchableOpacity
+                            style={styles.navButton2}
+                            onPress={() => generateOutfit(newItemTitle)}
+                          >
+                            <Text style={styles.buttonText}>Build</Text>
+                          </TouchableOpacity>
 
-                    {imageUri && (
-                      <Image
-                        source={{ uri: imageUri }}
-                        style={{ width: 200, height: 200, borderRadius: 10, marginBottom: 10 }}
-                        resizeMode="cover"
-                      />
-                    )}
+                          {loading && <ActivityIndicator size="large" color="#000" />}
 
-                    <View style = {styles.navButtons}>
-                      <TouchableOpacity 
-                        style={styles.navButton2} 
-                        onPress={ () => generateOutfit(newItemTitle)}
-                      >
-                        <Text style={styles.buttonText}>Build</Text>
-                      </TouchableOpacity>
-
-                      {loading && <ActivityIndicator size="large" color="#000" />}
-
-                      <TouchableOpacity style={[styles.navButton2]} onPress={() => setVisible(false)}>
-                        <Text style={styles.buttonText}>Close</Text>
-                      </TouchableOpacity>
-
-                    </View>
-                    {!loading && output !== '' && (
-                        <View style={styles.outputContainer}>
-                          <ScrollView style={styles.outputScroll} nestedScrollEnabled={true}>
-                            <Text style={styles.output}>{output}</Text>
-                          </ScrollView>
+                          <TouchableOpacity
+                            style={styles.navButton2}
+                            onPress={() => {
+                              resetFields();
+                              setVisible(false);
+                            }}
+                          >
+                            <Text style={styles.buttonText}>Close</Text>
+                          </TouchableOpacity>
                         </View>
-                      )}
-                  </View>
-                  </ScrollView>
+                      </View>
+                    ) : (
+                      <View style={{ flex: 1 }}>
+                        <ScrollView
+                          style={{ flex: 1 }}
+                          contentContainerStyle={{
+                            paddingTop: 32,
+                            paddingHorizontal: 15,
+                            paddingBottom: 100, // space for buttons
+                          }}
+                          showsVerticalScrollIndicator={true}
+                        >
+                          <Text style={styles.output}>{output}</Text>
+                        </ScrollView>
+
+                        <View
+                          style={{
+                            position: 'absolute',
+                            bottom: 20,
+                            left: 0,
+                            right: 0,
+                            flexDirection: 'row',
+                            justifyContent: 'space-evenly',
+                          }}
+                        >
+                          <TouchableOpacity
+                            style={styles.navButton2}
+                            onPress={ () => {handleAddItem(); setVisible(false);}}
+                          >
+                            <Text style={styles.buttonText}>Save Outfit</Text>
+                          </TouchableOpacity>
+
+                          <TouchableOpacity
+                            style={styles.navButton2}
+                            onPress={() => {
+                              resetFields();
+                              setVisible(false);
+                            }}
+                          >
+                            <Text style={styles.buttonText}>Close</Text>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    )}
                 </Animated.View>
               </View>
             </Modal>
@@ -399,6 +496,13 @@ useEffect(() => {
                   style={styles.itemCard}
                   onPress={() => handleViewItem(item.id)}
                 >
+                {item.imageUri && (
+                  <Image
+                    source = {{uri: item.imageUri}}
+                    style = {{height: 150, borderRadius: 10  }}
+                    resizeMode = "cover"
+                  />
+                )}
                   <Text style={styles.itemTitle}>{item.title}</Text>
                   <Text style={styles.itemDescription}>{item.description}</Text>
                   <TouchableOpacity 
@@ -412,6 +516,20 @@ useEffect(() => {
             ) : (
               <Text style={styles.emptyText}>No items found</Text>
             )}
+          </View>
+
+          <View style = {styles.userContainer}>
+            <Text style = {styles.title}>Recent Fashion Sustainability News</Text>
+            <Text style = {styles.header2}>Click on the headlines to view the Articles!</Text>
+              {loading ? (
+                <Text style={styles.loadingText}>Loading news...</Text>
+              ) : (
+                <FlatList
+                  data={articles}
+                  renderItem={renderArticle}
+                  keyExtractor={(item) => item.url}
+                />
+              )}
           </View>
 
           <View style={styles.platformInfo}>
@@ -462,7 +580,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
-
   outputContainer: {
     maxHeight: 400,
     backgroundColor: '#F5E6D3',
@@ -471,12 +588,17 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     width: '100%',
   },
+  outputFullScreen: {
+    flex: 1,
+    justifyContent: 'space-between',
+    padding: 20,
+    },
   output: {
     fontSize: 16,
     color: '#261605',
     textAlign: 'left',
     padding: 10,
-    marginTop: 10,
+    marginTop: 50,
   },
   scrollContent: {
     flexGrow: 1,
@@ -498,6 +620,13 @@ const styles = StyleSheet.create({
     color: '#261605',
     textAlign: 'center',
     marginBottom: 30,
+    fontWeight: 'bold',
+  },
+  header2: {
+    fontSize: 16,
+    color: '#33271b',
+    textAlign: 'center',
+    marginBottom: 15,
     fontWeight: 'bold',
   },
   userContainer: {
@@ -548,8 +677,25 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
     color: '#F5E6D3',
-    marginBottom: 15,
+    marginBottom: 5,
     textAlign: 'center',
+  },
+  articleSubtitle: {
+    fontSize: 13,
+    color: '#F5E6D3',
+    marginBottom: 2,
+  },
+
+  articleTitle: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: '#1a0e02',
+    marginBottom: 2,
+  },
+  description: {
+    fontSize: 17,
+    color: '#261605',
+    marginBottom: 5,
   },
   sectionTitle: {
     fontSize: 18,
