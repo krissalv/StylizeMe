@@ -13,7 +13,7 @@ export default function ItemDetailsScreen() {
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [fullDescription, setDescription] = useState('');
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
@@ -26,7 +26,7 @@ export default function ItemDetailsScreen() {
           if (itemData) {
             setItem(itemData);
             setTitle(itemData.title || '');
-            setDescription(itemData.description || '');
+            setDescription(itemData.fullDescription || '');
           } else {
             Alert.alert('Error', 'Item not found');
             router.back();
@@ -52,7 +52,7 @@ export default function ItemDetailsScreen() {
     try {
       const updatedItem = {
         title: title.trim(),
-        description: description.trim(),
+        fullDescription: fullDescription.trim(),
       };
       
       await updateItem(id, updatedItem);
@@ -130,22 +130,22 @@ export default function ItemDetailsScreen() {
               <Text style={styles.backButtonText}>← Back</Text>
             </TouchableOpacity>
 
-            <Text style={styles.title}>Item Details</Text>
+            <Text style={styles.title}>Outfit Details</Text>
             
             <View style={styles.itemContainer}>
               {isEditing ? (
                 <>
                   <TextInput
                     style={styles.input}
-                    placeholder="Item Title"
+                    placeholder="Style Name"
                     value={title}
                     onChangeText={setTitle}
                   />
                   
                   <TextInput
                     style={[styles.input, styles.textArea]}
-                    placeholder="Item Description"
-                    value={description}
+                    placeholder="Outfit Description"
+                    value={fullDescription}
                     onChangeText={setDescription}
                     multiline
                     numberOfLines={5}
@@ -157,7 +157,7 @@ export default function ItemDetailsScreen() {
                       onPress={() => {
                         setIsEditing(false);
                         setTitle(item.title || '');
-                        setDescription(item.description || '');
+                        setDescription(item.fullDescription || '');
                       }}
                     >
                       <Text style={styles.buttonText}>Cancel</Text>
@@ -177,13 +177,13 @@ export default function ItemDetailsScreen() {
               ) : (
                 <>
                   <View style={styles.infoContainer}>
-                    <Text style={styles.label}>Title:</Text>
+                    <Text style={styles.label}>Style Name:</Text>
                     <Text style={styles.value}>{item.title}</Text>
                   </View>
                   
                   <View style={styles.infoContainer}>
-                    <Text style={styles.label}>Description:</Text>
-                    <Text style={styles.value}>{item.description || 'No description'}</Text>
+                    <Text style={styles.label}>Outfit Description:</Text>
+                    <Text style={styles.value}>{item.fullDescription || 'No description'}</Text>
                   </View>
                   
                   <View style={styles.infoContainer}>
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     position: 'absolute',
-    top: Platform.OS === 'ios' ? 50 : 20,
+    top: Platform.OS === 'ios' ? 50 : (StatusBar.currentHeight || 24) + 20,
     left: 20,
     zIndex: 1,
   },
