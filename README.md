@@ -1,50 +1,94 @@
-# Welcome to your Expo app 👋
+# StylizeMe
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A cross-platform mobile application for personal styling and outfit planning.
 
-## Get started
+## Features
 
-1. Install dependencies
+- User authentication (sign up, login, password reset)
+- Profile management
+- Outfit planning
+- Style tips and recommendations
+- Cross-platform support (iOS, Android, Web)
 
-   ```bash
+## Tech Stack
+
+- React Native
+- Expo
+- Firebase Authentication
+- Firebase Firestore
+- React Navigation
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v14 or later)
+- npm or yarn
+- Expo CLI
+
+### Installation
+
+1. Clone the repository:
+   ```
+   git clone https://github.com/yourusername/StylizeMe.git
+   cd StylizeMe
+   ```
+
+2. Install dependencies:
+   ```
    npm install
+   # or
+   yarn install
    ```
 
-2. Start the app
+3. Create a `.env` file in the root directory with your Firebase configuration:
+   ```
+   FIREBASE_API_KEY=your_api_key
+   FIREBASE_AUTH_DOMAIN=your_auth_domain
+   FIREBASE_PROJECT_ID=your_project_id
+   FIREBASE_STORAGE_BUCKET=your_storage_bucket
+   FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+   FIREBASE_APP_ID=your_app_id
+   ```
+3. To run the app the the additional dependencies need to be installed: 
+# Install React Navigation
+npm install @react-navigation/native
 
-   ```bash
-    npx expo start
+# Install dependencies for React Navigation (required for linking and navigation)
+npm install react-native-screens react-native-safe-area-context
+
+# Install the Stack Navigator
+npm install @react-navigation/stack
+
+
+4. Start the development server:
+   ```
+   npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+5. Run on your preferred platform:
+   - Press `i` for iOS simulator
+   - Press `a` for Android emulator
+   - Press `w` for web browser
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Project Structure
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- `app/` - Main application code
+  - `(auth)/` - Authentication screens (login, register, welcome)
+  - `(tabs)/` - Tab-based navigation screens (home, explore, profile)
+  - `item/` - Item detail screens
+- `assets/` - Images, fonts, and other static assets
+- `components/` - Reusable UI components
+- `config/` - Configuration files (Firebase, etc.)
+- `context/` - React context providers
+- `utils/` - Utility functions and helpers
 
-## Get a fresh project
+## License
 
-When you're ready, run:
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-```bash
-npm run reset-project
-```
+## Acknowledgments
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- [Expo](https://expo.dev/)
+- [React Native](https://reactnative.dev/)
+- [Firebase](https://firebase.google.com/)
