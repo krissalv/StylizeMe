@@ -29,7 +29,7 @@ export default function HomeScreen() {
   const [showOutputOnly, setShowOutputOnly] = useState(false);
   const [articles, setArticles] = useState([]);
   const [modalVisible, setModalVisible] = useState([]);
-  const API_KEY = '0c4b7246ea024ad0a0b06b3494d53d1e'; // Replace with your actual API key
+  const API_KEY = ''; // Replace with your actual API key
   const query = 'fashion sustainability'; // Search query
 
 
@@ -266,7 +266,7 @@ useEffect(() => {
         method: "POST", 
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer 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", // Make sure to add your API key here
+          "Authorization": "", // Make sure to add your API key here
         },
         body: JSON.stringify({
           model: "gpt-4o", // Correct model name
