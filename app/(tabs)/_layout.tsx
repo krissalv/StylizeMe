@@ -9,9 +9,7 @@ export default function TabLayout() {
         tabBarActiveTintColor: '#261605',
         tabBarInactiveTintColor: '#4A3B2B',
         tabBarStyle: {
-          backgroundColor: '#fff',
-          borderTopWidth: 1,
-          borderTopColor: '#e5e5e5',
+          backgroundColor: '#FFF3D8',
           height: Platform.OS === 'ios' ? 88 : 60,
           paddingBottom: Platform.OS === 'ios' ? 30 : 10,
         },
@@ -33,6 +31,15 @@ export default function TabLayout() {
           title: 'Explore',
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name="explore" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="trade"
+        options={{
+          title: 'Trade',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name="shopping-bag" size={size} color={color} />
           ),
         }}
       />

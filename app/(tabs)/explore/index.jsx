@@ -136,9 +136,11 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   title: {
+    marginTop: 35,
+    marginHorizontal: 9,
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#F5E6D3',
+    color: '#261605',
   },
   searchButton: {
     padding: 10,

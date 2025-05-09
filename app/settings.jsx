@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     position: 'absolute',
-    top: Platform.OS === 'ios' ? 50 : 20,
+    top: Platform.OS === 'ios' ? 50 : (StatusBar.currentHeight || 24) + 20,
     left: 20,
     zIndex: 1,
   },

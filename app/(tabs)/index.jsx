@@ -28,7 +28,8 @@ export default function HomeScreen() {
   const SCREEN_HEIGHT = Dimensions.get('window').height;
   const [showOutputOnly, setShowOutputOnly] = useState(false);
   const [articles, setArticles] = useState([]);
-  const API_KEY = ''; // Replace with your actual API key
+  const [modalVisible, setModalVisible] = useState([]);
+  const API_KEY = '0c4b7246ea024ad0a0b06b3494d53d1e'; // Replace with your actual API key
   const query = 'fashion sustainability'; // Search query
 
 
@@ -101,20 +102,6 @@ useEffect(() => {
       Alert.alert(`Can't open this URL: ${url}`);
     }
   };
-  
-
-  const renderArticle = ({ item }) => {
-    return (
-      <View style={styles.articleContainer}>
-        <Text style={styles.articleTitle} onPress={() => Linking.openURL(item.url)}>{item.title}</Text>
-        <Text style={styles.description}>{item.description}</Text>
-        <Text style={styles.articleSubtitle}>Source: {item.source.name}</Text>
-        <Text style={styles.articleSubtitle}>Published: {new Date(item.publishedAt).toLocaleString()}</Text>
-      </View>
-    );
-  };
-
-
 
   const resetFields = () => {
     setNewItemTitle('');
@@ -220,7 +207,7 @@ useEffect(() => {
       allowsEditing: true,
       aspect: [3, 4],
       quality: 1,
-      base64: true, // This is important to get the base64 string
+      base64: true, 
     });
   
     if (!result.canceled && result.assets) {
@@ -279,7 +266,7 @@ useEffect(() => {
         method: "POST", 
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "", // Make sure to add your API key here
+          "Authorization": "Bearer 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", // Make sure to add your API key here
         },
         body: JSON.stringify({
           model: "gpt-4o", // Correct model name
@@ -488,7 +475,7 @@ useEffect(() => {
           </View>
 
           <View style={styles.dataContainer}>
-            <Text style={styles.sectionTitle}>Your Items</Text>
+            <Text style={styles.sectionTitle}>Your Outfits</Text>
             {items.length > 0 ? (
               items.map((item) => (
                 <TouchableOpacity 
@@ -521,15 +508,17 @@ useEffect(() => {
           <View style = {styles.userContainer}>
             <Text style = {styles.title}>Recent Fashion Sustainability News</Text>
             <Text style = {styles.header2}>Click on the headlines to view the Articles!</Text>
-              {loading ? (
-                <Text style={styles.loadingText}>Loading news...</Text>
-              ) : (
-                <FlatList
-                  data={articles}
-                  renderItem={renderArticle}
-                  keyExtractor={(item) => item.url}
-                />
-              )}
+              {articles.map((article) => (
+                <TouchableOpacity
+                  key={article.url}
+                  style={styles.articleCard}
+                  onPress={() => Linking.openURL(article.url)}
+                >
+                  <Text style={styles.articleTitle}>{article.title}</Text>
+                  <Text style={styles.articleSource}>{article.source.name}</Text>
+                  <Text style={styles.description}>{article.description}</Text>
+                </TouchableOpacity>
+              ))}
           </View>
 
           <View style={styles.platformInfo}>
@@ -690,12 +679,16 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: 'bold',
     color: '#1a0e02',
-    marginBottom: 2,
   },
   description: {
     fontSize: 17,
     color: '#261605',
-    marginBottom: 5,
+    marginBottom: 15,
+  },
+  articleSource: {
+    fontSize: 18,
+    fontWeight: 'bold',    
+    color: '#bfaa8f',
   },
   sectionTitle: {
     fontSize: 18,
