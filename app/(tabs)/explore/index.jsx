@@ -1,12 +1,35 @@
-import React from 'react';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Platform, ImageBackground } from 'react-native';
+import React, { useRef, useState, useEffect } from 'react';
+import { Linking, StyleSheet, Text, View, ScrollView, TouchableOpacity, Platform, ImageBackground, Modal } from 'react-native';
 import { useRouter } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import appBgImg from "@/assets/images/appBg.png";
+import axios from 'axios';
 
 export default function Explore() {
   const router = useRouter();
+  const API_KEY = '0c4b7246ea024ad0a0b06b3494d53d1e'; // Replace with your actual API key
+  const query = 'fashion styling tips'; // Search query
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  
+  useEffect(() => {
+    // Function to fetch the news data
+    const fetchNews = async () => {
+      try {
+        const response = await axios.get(`https://newsapi.org/v2/everything?q=${query}&apiKey=${API_KEY}&pageSize=5`);
+        setArticles(response.data.articles);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching news:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchNews();
+  }, []);
 
   const categories = [
     {
@@ -48,14 +71,8 @@ export default function Explore() {
     router.push('/search');
   };
 
-  const handlePlanOutfit = () => {
-    // Navigate to plan outfit screen
-    router.push('/plan-outfit');
-  };
-
   const handleViewTips = () => {
-    // Navigate to style tips screen
-    router.push('/style-tips');
+    setModalVisible(true);
   };
 
   return (
@@ -79,14 +96,6 @@ export default function Explore() {
         <ScrollView style={styles.content}>
           {/* Quick Actions Section */}
           <View style={styles.quickActions}>
-            <TouchableOpacity 
-              style={[styles.actionButton, { backgroundColor: '#4A3B2B' }]}
-              onPress={handlePlanOutfit}
-            >
-              <MaterialIcons name="style" size={24} color="#F5E6D3" />
-              <Text style={styles.actionText}>Plan Outfit</Text>
-            </TouchableOpacity>
-
             <TouchableOpacity 
               style={[styles.actionButton, { backgroundColor: '#8B4513' }]}
               onPress={handleViewTips}
@@ -114,6 +123,42 @@ export default function Explore() {
             </View>
           </View>
         </ScrollView>
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <ScrollView>
+                <Text style={styles.modalTitle}>Fashion Styling Articles</Text>
+                {loading ? (
+                  <Text style={styles.loadingText}>Loading...</Text>
+                ) : (
+                  articles.map((article, index) => (
+                    <TouchableOpacity 
+                      key={index} 
+                      style={styles.articleCard}
+                      onPress={() => Linking.openURL(article.url)}
+                    >
+                      <Text style={styles.articleTitle}>{article.title}</Text>
+                      <Text style={styles.articleSource}>{article.source.name}</Text>
+                    </TouchableOpacity>
+                  ))
+                )}
+              </ScrollView>
+              <TouchableOpacity
+                onPress={() => setModalVisible(false)}
+                style={styles.closeButton}
+              >
+                <Text style={styles.closeButtonText}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+
       </ImageBackground>
     </View>
   );
@@ -142,9 +187,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#261605',
   },
-  searchButton: {
-    padding: 10,
-  },
   content: {
     flex: 1,
   },
@@ -158,7 +200,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 12,
     alignItems: 'center',
-    width: '45%',
+    width: '100%',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -223,4 +265,56 @@ const styles = StyleSheet.create({
     color: '#261605',
     textAlign: 'center',
   },
+  modalOverlay: {
+  flex: 1,
+  justifyContent: 'flex-end',
+  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+},
+modalContent: {
+  height: '75%',
+  backgroundColor: '#F5E6D3',
+  borderWidth: 3,
+  borderColor: '#261605',
+  borderTopLeftRadius: 20,
+  borderTopRightRadius: 20,
+  padding: 20,
+},
+modalTitle: {
+  fontSize: 20,
+  fontWeight: 'bold',
+  marginBottom: 15,
+},
+articleCard: {
+  marginBottom: 15,
+  padding: 10,
+  backgroundColor: 'rgba(94, 78, 62, 0.8)',
+  borderRadius: 10,
+},
+articleTitle: {
+  color: '#261605',
+  fontSize: 16,
+  fontWeight: '600',
+},
+articleSource: {
+  fontSize: 12,
+  color: '#F5E6D3',
+},
+closeButton: {
+  marginTop: 10,
+  padding: 15,
+  backgroundColor: '#261605',
+  borderRadius: 10,
+  alignItems: 'center',
+},
+closeButtonText: {
+  color: '#F5E6D3',
+  fontSize: 16,
+  fontWeight: 'bold',
+},
+loadingText: {
+  fontSize: 16,
+  color: 'gray',
+  textAlign: 'center',
+},
+
 }); 

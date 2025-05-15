@@ -10,7 +10,6 @@ export default function SettingsScreen() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
-  const [darkModeEnabled, setDarkModeEnabled] = useState(false);
   const [dataUsageEnabled, setDataUsageEnabled] = useState(true);
 
   useEffect(() => {
@@ -140,17 +139,7 @@ export default function SettingsScreen() {
                 thumbColor={notificationsEnabled ? '#FFF3D8' : '#f4f3f4'}
               />
             </View>
-            
-            <View style={styles.settingItem}>
-              <Text style={styles.settingLabel}>Dark Mode</Text>
-              <Switch
-                value={darkModeEnabled}
-                onValueChange={setDarkModeEnabled}
-                trackColor={{ false: '#767577', true: '#261605' }}
-                thumbColor={darkModeEnabled ? '#FFF3D8' : '#f4f3f4'}
-              />
-            </View>
-            
+                        
             <View style={styles.settingItem}>
               <Text style={styles.settingLabel}>Data Usage</Text>
               <Switch

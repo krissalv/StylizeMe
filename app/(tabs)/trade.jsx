@@ -13,7 +13,8 @@ import Octicons from '@expo/vector-icons/Octicons';
 import Entypo from '@expo/vector-icons/Entypo';
 import * as ImagePicker from 'expo-image-picker';
 import AntDesign from '@expo/vector-icons/AntDesign';
-
+import top from "@/assets/images/top.jpg";
+import dress from "@/assets/images/dress.jpg";
 
 export default function trade() {
   const [user, setUser] = useState(null);
@@ -73,8 +74,16 @@ export default function trade() {
     }));
   };
 
+  const handleCloseTradeModal = () => {
+    setSelectedImage(null);       
+    setModalVisible(false);       
+  };
 
-
+  const handleCloseMessageModal = () => {
+  setNewItemTitle('');          
+  setModalMessageVisible(false);
+};
+  
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -171,6 +180,64 @@ export default function trade() {
                     </View>
                 </View>
             </View>
+
+            <View style={styles.post}>
+                <View style = {{
+                    flexDirection: 'row',
+                }}>
+                    <Text style={styles.backButtonText}>lexRes02</Text>
+                </View>
+                <Image
+                    style={styles.imagePost}
+                    source={top}
+                />
+                <View style={{ paddingHorizontal: 20, paddingBottom: 10, width: '100%' }}>
+                    <View style={styles.buttonRow}>
+                        <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
+                            <Octicons name="arrow-switch" size={30} color={'#FFF3D8'} />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.button} onPress={() => setModalMessageVisible(true)}>
+                            <Entypo name="message" size={30} color={'#FFF3D8'} />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.button} onPress={() => toggleLike('post4')}>
+                            <Ionicons
+                                name="heart"
+                                size={30}
+                                color={likedPosts['post4'] ? 'red' : '#FFF3D8'}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </View>
+
+            <View style={styles.post}>
+                <View style = {{
+                    flexDirection: 'row',
+                }}>
+                    <Text style={styles.backButtonText}>oogwaybom</Text>
+                </View>
+                <Image
+                    style={styles.imagePost}
+                    source={dress}
+                />
+                <View style={{ paddingHorizontal: 20, paddingBottom: 10, width: '100%' }}>
+                    <View style={styles.buttonRow}>
+                        <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
+                            <Octicons name="arrow-switch" size={30} color={'#FFF3D8'} />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.button} onPress={() => setModalMessageVisible(true)}>
+                            <Entypo name="message" size={30} color={'#FFF3D8'} />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.button} onPress={() => toggleLike('post5')}>
+                            <Ionicons
+                                name="heart"
+                                size={30}
+                                color={likedPosts['post5'] ? 'red' : '#FFF3D8'}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </View>
         </ScrollView>
         <Modal
             animationType="slide"
@@ -198,10 +265,10 @@ export default function trade() {
                     />
                 )}
                 <View style = {styles.buttonRow}>
-                    <TouchableOpacity style = {styles.button2} onPress={() => setModalVisible(false)}>
+                    <TouchableOpacity style = {styles.button2} onPress={() => handleCloseTradeModal()}>
                         <Text style={styles.buttonText}>Send</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.button3}>
+                    <TouchableOpacity onPress={() => handleCloseTradeModal()} style={styles.button3}>
                         <Text style={styles.buttonText2}>Cancel</Text>
                     </TouchableOpacity>
 
@@ -226,10 +293,10 @@ export default function trade() {
                     onChangeText={setNewItemTitle}
                 />
                 <View style = {styles.buttonRow}>
-                    <TouchableOpacity style = {styles.button2} onPress={() => setModalMessageVisible(false)}>
+                    <TouchableOpacity style = {styles.button2} onPress={() => handleCloseMessageModal()}>
                         <Text style={styles.buttonText}>Send</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => setModalMessageVisible(false)} style={styles.button3}>
+                    <TouchableOpacity onPress={() => handleCloseMessageModal()} style={styles.button3}>
                         <Text style={styles.buttonText2}>Cancel</Text>
                     </TouchableOpacity>
 

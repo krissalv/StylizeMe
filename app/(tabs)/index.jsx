@@ -94,15 +94,6 @@ useEffect(() => {
     fetchNews();
   }, []);
 
-  const handlePress = async (url) => {
-    const supported = await Linking.canOpenURL(url);
-    if (supported) {
-      await Linking.openURL(url);
-    } else {
-      Alert.alert(`Can't open this URL: ${url}`);
-    }
-  };
-
   const resetFields = () => {
     setNewItemTitle('');
     setImageUri(null);
@@ -144,6 +135,8 @@ useEffect(() => {
   const handleDeleteItem = async (itemId) => {
     try {
       await deleteItem(itemId);
+
+      setItems((prevItems) => prevItems.filter(item => item.id !== itemId));
       
       // Refresh items list
       const updatedItems = await getUserItems(user.uid);
@@ -245,7 +238,7 @@ useEffect(() => {
   const saveImage = async (resizedUri, base64) => {
     try {
       setImageUri(resizedUri); // Set URI for image preview
-      setImageBase64(base64); // Optionally, save base64 for API call
+      setImageBase64(base64); 
       setModalVisible(false); // Close modal after image is selected
     } catch (error) {
       console.error("Error saving image:", error);
@@ -259,17 +252,17 @@ useEffect(() => {
       console.log("🖼️ Base64 Length:", imageBase64?.length);
   
       const resizedBase64 = await resizeImage(imageUri);
-      console.log(resizedBase64?.slice(0, 100)); // Print first 100 chars
+      console.log(resizedBase64?.slice(0, 100)); 
       console.log(`Final image string length: ${resizedBase64.length}`);
 
       const response = await fetch("https://api.openai.com/v1/chat/completions", {
         method: "POST", 
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "", // Make sure to add your API key here
+          "Authorization": "", 
         },
         body: JSON.stringify({
-          model: "gpt-4o", // Correct model name
+          model: "gpt-4o", 
           messages: [
             {
               role: "user",
@@ -433,7 +426,7 @@ useEffect(() => {
                           contentContainerStyle={{
                             paddingTop: 32,
                             paddingHorizontal: 15,
-                            paddingBottom: 100, // space for buttons
+                            paddingBottom: 100, 
                           }}
                           showsVerticalScrollIndicator={true}
                         >
@@ -516,7 +509,6 @@ useEffect(() => {
                 >
                   <Text style={styles.articleTitle}>{article.title}</Text>
                   <Text style={styles.articleSource}>{article.source.name}</Text>
-                  <Text style={styles.description}>{article.description}</Text>
                 </TouchableOpacity>
               ))}
           </View>
@@ -613,7 +605,7 @@ const styles = StyleSheet.create({
   },
   header2: {
     fontSize: 16,
-    color: '#33271b',
+    color: 'rgb(34, 25, 16)',
     textAlign: 'center',
     marginBottom: 15,
     fontWeight: 'bold',
@@ -669,14 +661,14 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     textAlign: 'center',
   },
-  articleSubtitle: {
-    fontSize: 13,
-    color: '#F5E6D3',
-    marginBottom: 2,
-  },
-
+  articleCard: {
+  marginBottom: 15,
+  padding: 10,
+  backgroundColor: 'rgba(245, 230, 211, 0.9)',
+  borderRadius: 10,
+},
   articleTitle: {
-    fontSize: 25,
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#1a0e02',
   },
@@ -686,9 +678,9 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   articleSource: {
-    fontSize: 18,
+    fontSize: 15,
     fontWeight: 'bold',    
-    color: '#bfaa8f',
+    color: '#4A3B2B',
   },
   sectionTitle: {
     fontSize: 18,

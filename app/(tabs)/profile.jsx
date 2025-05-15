@@ -136,6 +136,16 @@ export default function ProfileScreen() {
                   />
                   
                   <View style={styles.buttonRow}>
+                   <TouchableOpacity 
+                      style={styles.button}
+                      onPress={handleSaveProfile}
+                      disabled={loading}
+                    >
+                      <Text style={styles.buttonText}>
+                        {loading ? 'Saving...' : 'Save'}
+                      </Text>
+                    </TouchableOpacity>
+                    
                     <TouchableOpacity 
                       style={[styles.button, styles.cancelButton]}
                       onPress={() => {
@@ -145,17 +155,7 @@ export default function ProfileScreen() {
                         setUsername(userProfile?.username || '');
                       }}
                     >
-                      <Text style={styles.buttonText}>Cancel</Text>
-                    </TouchableOpacity>
-                    
-                    <TouchableOpacity 
-                      style={styles.button}
-                      onPress={handleSaveProfile}
-                      disabled={loading}
-                    >
-                      <Text style={styles.buttonText}>
-                        {loading ? 'Saving...' : 'Save'}
-                      </Text>
+                      <Text style={styles.buttonText2}>Cancel</Text>
                     </TouchableOpacity>
                   </View>
                 </>
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     position: 'absolute',
-    top: Platform.OS === 'ios' ? 50 : 20,
+    top: Platform.OS === 'ios' ? 50 : (StatusBar.currentHeight || 24) + 20,
     left: 20,
     zIndex: 1,
   },
@@ -267,13 +267,22 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 15,
     marginTop: 20,
-    width: '100%',
+    width: '45%',
   },
   cancelButton: {
-    backgroundColor: '#666',
+    backgroundColor: '#FFF3D8',
+    borderWidth: 3, 
+    borderColor: '#261605',
+
   },
   buttonText: {
     color: '#FFF3D8',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  buttonText2: {
+    color: '#261605',
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 16,
